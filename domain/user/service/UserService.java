@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -31,5 +34,16 @@ public class UserService {
                 () -> new IllegalStateException("존재하지 않는 유정비니다.")
         );
         return new UserResponse(user.getId(), user.getEmail());
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserResponse> findAll() {
+        List<User> users = userRepository.findAll();
+
+        List<UserResponse> response = new ArrayList<>();
+        for (User user : users) {
+            response.add(new UserResponse(user.getId(), user.getEmail()));
+        }
+        return response;
     }
 }

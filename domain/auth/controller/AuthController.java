@@ -5,6 +5,7 @@ import com.example.springbasicnewspeed.domain.auth.dto.SigninResponse;
 import com.example.springbasicnewspeed.domain.auth.dto.SignupRequest;
 import com.example.springbasicnewspeed.domain.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +23,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/signin")
-    public SigninResponse signin(@RequestBody SigninRequest request) {
-        return authService.signin(request);
+    public ResponseEntity<SigninResponse> signin(@RequestBody SigninRequest request) {
+        return ResponseEntity.ok(authService.signin(request));
     }
 }

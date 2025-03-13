@@ -14,8 +14,11 @@ public class User {
     private Long id;
     @Column(unique = true, nullable = false)
     private String email;
+    @Column(nullable = false)
+    private String password;
 
-    public User(String email) {
+    public User(String email, String password) {
         this.email = email;
+        this.password = password;
     }
 }

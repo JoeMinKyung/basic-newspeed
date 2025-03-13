@@ -1,10 +1,8 @@
 package com.example.springbasicnewspeed.domain.auth.controller;
 
-import com.example.springbasicnewspeed.config.JwtUtil;
 import com.example.springbasicnewspeed.domain.auth.dto.SigninRequest;
 import com.example.springbasicnewspeed.domain.auth.dto.SigninResponse;
 import com.example.springbasicnewspeed.domain.auth.dto.SignupRequest;
-import com.example.springbasicnewspeed.domain.auth.dto.SignupResponse;
 import com.example.springbasicnewspeed.domain.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +17,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/auth/signup")
-    public SignupResponse signup(@RequestBody SignupRequest request) {
-        return authService.signup(request);
+    public void signup(@RequestBody SignupRequest request) {
+        authService.signup(request);
     }
 
     @PostMapping("/auth/signin")

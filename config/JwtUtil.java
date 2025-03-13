@@ -28,8 +28,11 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
-        byte[] bytes = Base64.getDecoder().decode(secretKey);
-        key = Keys.hmacShaKeyFor(bytes);
+        try {
+            key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to initialize JWT key", e);
+        }
     }
 
     public String createToken(Long userId, String email) {

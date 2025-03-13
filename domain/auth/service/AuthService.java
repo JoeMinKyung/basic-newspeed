@@ -34,6 +34,10 @@ public class AuthService {
             throw new IllegalStateException("이미 존재하는 이메일입니다.");
         }
 
+        if (userRepository.existsByUserName(request.getUserName())) {
+            throw new IllegalStateException("이미 존재하는 닉네임입니다.");
+        }
+
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         User user = new User(request.getEmail(), encodedPassword, request.getUserName());
 

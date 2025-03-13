@@ -19,6 +19,6 @@ public class SignupRequest {
     @NotBlank(message = "비밀번호 확인은 필수 항목입니다.")
     public String passwordCheck;
 
-    @NotBlank
+    @NotBlank(message = "닉네임은 필수 항목입니다.")
     private String userName;
 }

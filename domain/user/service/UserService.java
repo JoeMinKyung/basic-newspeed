@@ -1,8 +1,9 @@
 package com.example.springbasicnewspeed.domain.user.service;
 
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
-import com.example.springbasicnewspeed.domain.user.dto.UserRequest;
-import com.example.springbasicnewspeed.domain.user.dto.UserResponse;
+import com.example.springbasicnewspeed.domain.user.dto.request.UserRequest;
+import com.example.springbasicnewspeed.domain.user.dto.response.UserProfileResponse;
+import com.example.springbasicnewspeed.domain.user.dto.response.UserResponse;
 import com.example.springbasicnewspeed.domain.user.entity.User;
 import com.example.springbasicnewspeed.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class UserService {
 
         List<UserResponse> response = new ArrayList<>();
         for (User user : users) {
-            response.add(new UserResponse(user.getId(), user.getEmail(), user.getPassword()));
+            response.add(new UserResponse(user.getId(), user.getEmail(), user.getUserName(), user.getPassword()));
         }
         return response;
     }
@@ -36,9 +37,23 @@ public class UserService {
         );  // 레파짓토리에서 찾는거 말고 다른방법도??
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalStateException("이미 존재하는 이메일이기 때문에 업데이트할 수 없습니다.");
+            throw new IllegalStateException("이미 존재하는 이메일이기 때문에 수정할 수 없습니다.");
+        }
+
+        if (userRepository.existsByUserName(request.getUserName())) {
+            throw new IllegalStateException("이미 존재하는 닉네임이기 때문에 수정할 수 없습니다.");
         }
 
         user.update(request.getEmail(), request.getPassword());
+    }
+
+    // 다른 유저 프로필 조회
+    @Transactional(readOnly = true)
+    public UserProfileResponse getUserProfile(AuthUser authUser, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new IllegalStateException("해당 유저가 존재하지 않습니다.")
+        );
+
+        return new UserProfileResponse(user.getEmail(), user.getUserName());
     }
 }

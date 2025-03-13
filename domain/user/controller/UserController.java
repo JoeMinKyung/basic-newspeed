@@ -2,14 +2,12 @@ package com.example.springbasicnewspeed.domain.user.controller;
 
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
 import com.example.springbasicnewspeed.domain.common.annotation.Auth;
-import com.example.springbasicnewspeed.domain.user.dto.UserRequest;
-import com.example.springbasicnewspeed.domain.user.dto.UserResponse;
+import com.example.springbasicnewspeed.domain.user.dto.request.UserRequest;
+import com.example.springbasicnewspeed.domain.user.dto.response.UserProfileResponse;
+import com.example.springbasicnewspeed.domain.user.dto.response.UserResponse;
 import com.example.springbasicnewspeed.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,7 +17,7 @@ public class UserController {
 
     private final UserService userService;
 
-    // 로그인한 유저만 전체 유저를 조회할 수 있는 API
+    // 로그인한 유저만 전체 유저를 조회할 수 있는 API -> admin만 가능하게 수정하기
     @GetMapping("/users")
     public List<UserResponse> getUsers(@Auth AuthUser authUser) {
         return userService.findAll();
@@ -29,5 +27,10 @@ public class UserController {
     @PutMapping("/users")
     public void update(@Auth AuthUser authUser, @RequestBody UserRequest request) {
         userService.update(authUser, request);
+    }
+
+    @GetMapping("/users/{userId}")
+    public UserProfileResponse getUser(@Auth AuthUser authUser, @PathVariable Long userId) {
+        return userService.getUserProfile(authUser, userId);
     }
 }

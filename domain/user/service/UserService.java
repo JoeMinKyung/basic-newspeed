@@ -30,21 +30,28 @@ public class UserService {
         return response;
     }
 
-    @Transactional(readOnly = true)
-    public void update(AuthUser authUser, UserRequest request) {
+    // 유저 프로필 수정
+    @Transactional
+    public UserProfileResponse update(AuthUser authUser, UserRequest request) {
         User user = userRepository.findById(authUser.getId()).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 유저입니다.")
         );  // 레파짓토리에서 찾는거 말고 다른방법도??
 
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalStateException("이미 존재하는 이메일이기 때문에 수정할 수 없습니다.");
+        if (request.getEmail() != null && !request.getEmail().isEmpty()) {
+            if (userRepository.existsByEmail(request.getEmail())) {
+                throw new IllegalStateException("이미 존재하는 이메일이기 때문에 수정할 수 없습니다.");
+            }
+            user.updateEmail(request.getEmail());
         }
 
-        if (userRepository.existsByUserName(request.getUserName())) {
-            throw new IllegalStateException("이미 존재하는 닉네임이기 때문에 수정할 수 없습니다.");
+        if (request.getUserName() != null && !request.getUserName().isEmpty()) {
+            if (userRepository.existsByUserName(request.getUserName())) {
+                throw new IllegalStateException("이미 존재하는 닉네임이기 때문에 수정할 수 없습니다.");
+            }
+            user.updateUserName(request.getUserName());
         }
 
-        user.update(request.getEmail(), request.getPassword());
+        return new UserProfileResponse(user.getEmail(), user.getUserName());
     }
 
     // 다른 유저 프로필 조회

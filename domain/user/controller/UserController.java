@@ -24,11 +24,12 @@ public class UserController {
     }
 
     // 자기 정보를 자신만 업데이트 가능
-    @PutMapping("/users")
-    public void update(@Auth AuthUser authUser, @RequestBody UserRequest request) {
-        userService.update(authUser, request);
+    @PatchMapping("/users")
+    public UserProfileResponse update(@Auth AuthUser authUser, @RequestBody UserRequest request) {
+        return userService.update(authUser, request);
     }
 
+    // 유저 프로필 단건 조회
     @GetMapping("/users/{userId}")
     public UserProfileResponse getUser(@Auth AuthUser authUser, @PathVariable Long userId) {
         return userService.getUserProfile(authUser, userId);

@@ -35,16 +35,22 @@ public class AuthService {
         }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
-        User user = new User(request.getEmail(), encodedPassword);
+        User user = new User(request.getEmail(), encodedPassword, request.getUserName());
 
         userRepository.save(user);
     }
 
     @Transactional(readOnly = true)
     public SigninResponse signin(SigninRequest request) {
-        UserResponse userResult = userService.findByEmail(request.getEmail());
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
+                () -> new IllegalStateException("이메일이 존재하지 않습니다.")
+        );
 
-        String bearJwt = jwtUtil.createToken(userResult.getId(), userResult.getEmail());
-        return new SigninResponse(bearJwt);
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalStateException("잘못된 비밀번호입니다.");
+        }
+
+        String bearerJwt = jwtUtil.createToken(user.getId(), user.getEmail());
+        return new SigninResponse(bearerJwt);
     }
 }

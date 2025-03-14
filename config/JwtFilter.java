@@ -49,6 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             httpRequest.setAttribute("userId", Long.parseLong(claims.getSubject()));
             httpRequest.setAttribute("email", claims.get("email"));
+            httpRequest.setAttribute("userName", claims.get("userName"));
 
             chain.doFilter(httpRequest, httpResponse);
         } catch (SecurityException | MalformedJwtException e) {

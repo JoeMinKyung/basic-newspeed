@@ -54,7 +54,7 @@ public class AuthService {
             throw new IncorrectPasswordException("잘못된 비밀번호입니다.");
         }
 
-        String bearerJwt = jwtUtil.createToken(user.getId(), user.getEmail());
+        String bearerJwt = jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserName());
         return new SigninResponse(bearerJwt);
     }
 }

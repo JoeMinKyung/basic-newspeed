@@ -2,6 +2,7 @@ package com.example.springbasicnewspeed.domain.user.controller;
 
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
 import com.example.springbasicnewspeed.domain.common.annotation.Auth;
+import com.example.springbasicnewspeed.domain.user.dto.request.PasswordUpdateRequest;
 import com.example.springbasicnewspeed.domain.user.dto.request.UserRequest;
 import com.example.springbasicnewspeed.domain.user.dto.response.UserProfileResponse;
 import com.example.springbasicnewspeed.domain.user.dto.response.UserResponse;
@@ -29,7 +30,13 @@ public class UserController {
         return userService.update(authUser, request);
     }
 
-    // 유저 프로필 단건 조회
+    // 유저 비밀번호 수정
+    @PatchMapping("/users/password")
+    public void updatePassword(@Auth AuthUser authUser, @RequestBody PasswordUpdateRequest request) {
+        userService.updatePassword(authUser, request);
+    }
+
+    // 다른 유저 프로필 단건 조회
     @GetMapping("/users/{userId}")
     public UserProfileResponse getUser(@Auth AuthUser authUser, @PathVariable Long userId) {
         return userService.getUserProfile(authUser, userId);

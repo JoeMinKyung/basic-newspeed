@@ -3,14 +3,22 @@ package com.example.springbasicnewspeed.domain.post.service;
 import com.example.springbasicnewspeed.common.exception.UserNotFoundException;
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
 import com.example.springbasicnewspeed.domain.post.dto.request.PostSaveRequest;
+import com.example.springbasicnewspeed.domain.post.dto.response.PostResponse;
 import com.example.springbasicnewspeed.domain.post.dto.response.PostSaveResponse;
 import com.example.springbasicnewspeed.domain.post.entity.Post;
 import com.example.springbasicnewspeed.domain.post.repository.PostRepository;
+import com.example.springbasicnewspeed.domain.user.dto.response.UserNameResponse;
 import com.example.springbasicnewspeed.domain.user.entity.User;
 import com.example.springbasicnewspeed.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,5 +50,20 @@ public class PostService {
                 savedPost.getCreatedAt(),
                 savedPost.getUpdatedAt()
         );
+    }
+
+    public List<PostResponse> getPosts(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Page<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+
+        return posts.stream().map(post -> new PostResponse(
+                post.getId(),
+                new UserNameResponse(post.getUser().getUserName()),
+                post.getTitle(),
+                post.getContent(),
+                post.getCreatedAt(),
+                post.getUpdatedAt()
+        )).collect(Collectors.toList());
     }
 }

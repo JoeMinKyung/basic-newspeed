@@ -5,6 +5,7 @@ import com.example.springbasicnewspeed.common.exception.UnauthorizedPostExceptio
 import com.example.springbasicnewspeed.common.exception.UserNotFoundException;
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
 import com.example.springbasicnewspeed.domain.post.dto.request.PostSaveRequest;
+import com.example.springbasicnewspeed.domain.post.dto.response.PageResponse;
 import com.example.springbasicnewspeed.domain.post.dto.response.PostResponse;
 import com.example.springbasicnewspeed.domain.post.dto.response.PostSaveResponse;
 import com.example.springbasicnewspeed.domain.post.entity.Post;
@@ -55,19 +56,23 @@ public class PostService {
         );
     }
 
-    public List<PostResponse> getPosts(int page, int size) {
+    public PageResponse<PostResponse> getPosts(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
 
         Page<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
 
-        return posts.stream().map(post -> new PostResponse(
+        List<PostResponse> postResponses = posts.stream()
+                .map(post -> new PostResponse(
                 post.getId(),
-                new UserNameResponse(post.getUser().getUserName()),
+                post.getUser().getUserName(),
                 post.getTitle(),
                 post.getContent(),
+                post.getPostLikedCount(),
                 post.getCreatedAt(),
                 post.getUpdatedAt()
         )).collect(Collectors.toList());
+
+        return new PageResponse<>(postResponses, page, posts.getSize(), posts.getTotalPages(), posts.getTotalElements());
     }
 
     public PostResponse updatePost(AuthUser authUser, Long postId, String title, String content) {
@@ -96,11 +101,23 @@ public class PostService {
 
         return new PostResponse(
                 post.getId(),
-                new UserNameResponse(post.getUser().getUserName()),
+                post.getUser().getUserName(),
                 post.getTitle(),
                 post.getContent(),
+                post.getPostLikedCount(),
                 post.getCreatedAt(),
                 post.getUpdatedAt()
         );
+    }
+
+    public void deletePost(Long postId, AuthUser authUser) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("게시물을 찾을 수 없습니다."));
+
+        if (!post.isPostOwnerByAuthUser(authUser)) {
+            throw new UnauthorizedPostException("작성자만 삭제할 수 있습니다.");
+        }
+
+        postRepository.delete(post);
     }
 }

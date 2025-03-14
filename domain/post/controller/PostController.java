@@ -1,9 +1,11 @@
 package com.example.springbasicnewspeed.domain.post.controller;
 
+import com.example.springbasicnewspeed.common.response.MessageResponse;
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
 import com.example.springbasicnewspeed.domain.common.annotation.Auth;
 import com.example.springbasicnewspeed.domain.post.dto.request.PostSaveRequest;
 import com.example.springbasicnewspeed.domain.post.dto.request.PostUpdateRequest;
+import com.example.springbasicnewspeed.domain.post.dto.response.PageResponse;
 import com.example.springbasicnewspeed.domain.post.dto.response.PostLikeResponse;
 import com.example.springbasicnewspeed.domain.post.dto.response.PostResponse;
 import com.example.springbasicnewspeed.domain.post.dto.response.PostSaveResponse;
@@ -14,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,12 +35,12 @@ public class PostController {
 
     // 포스트 조회
     @GetMapping("/posts")
-    public ResponseEntity<List<PostResponse>> getPosts(
+    public ResponseEntity<PageResponse<PostResponse>> getPosts(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        List<PostResponse> postResponses = postService.getPosts(page, size);
-        return ResponseEntity.ok(postResponses);
+        PageResponse<PostResponse> response = postService.getPosts(page, size);
+        return ResponseEntity.ok(response);
     }
 
     // 포스트 수정 (작성자 본인만 가능)
@@ -54,6 +55,14 @@ public class PostController {
     }
 
     // 포스트 삭제 (작성자 본인만 가능)
+    @DeleteMapping("/post/{postId}")
+    public ResponseEntity<MessageResponse> deletePost(
+            @Auth AuthUser authUser,
+            @PathVariable Long postId
+    ) {
+        postService.deletePost(postId, authUser);
+        return ResponseEntity.ok(MessageResponse.of("포스트가 삭제되었습니다!"));
+    }
 
     // 좋아요 토글 (좋아요 추가/제거)
     @PatchMapping("/posts/likes/{postId}")

@@ -1,6 +1,8 @@
 package com.example.springbasicnewspeed.domain.user.service;
 
+import com.example.springbasicnewspeed.config.PasswordEncoder;
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
+import com.example.springbasicnewspeed.domain.user.dto.request.PasswordUpdateRequest;
 import com.example.springbasicnewspeed.domain.user.dto.request.UserRequest;
 import com.example.springbasicnewspeed.domain.user.dto.response.UserProfileResponse;
 import com.example.springbasicnewspeed.domain.user.dto.response.UserResponse;
@@ -12,12 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public List<UserResponse> findAll() {
@@ -54,7 +58,33 @@ public class UserService {
         return new UserProfileResponse(user.getEmail(), user.getUserName());
     }
 
-    // 다른 유저 프로필 조회
+    // 유저 비밀번호 수정
+    @Transactional
+    public void updatePassword(AuthUser authUser, PasswordUpdateRequest request) {
+        User user = userRepository.findById(authUser.getId()).orElseThrow(
+                () -> new IllegalStateException("해당 유저가 존재하지 않습니다.")
+        );
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalStateException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        if (request.getNewPassword().length() < 8) {
+            throw new IllegalStateException("새 비밀번호는 8자 이상이어야 합니다.");
+        }
+
+        if (!Objects.equals(request.getNewPassword(), request.getNewPasswordCheck())) {
+            throw new IllegalStateException("새 비밀번호와 비밀번호 확인이 같지 않습니다.");
+        }
+
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new IllegalStateException("현재 비밀번호와 동일한 비밀번호로 변경할 수 없습니다.");
+        }
+
+        user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
+    }
+
+    // 다른 유저 프로필 단건 조회
     @Transactional(readOnly = true)
     public UserProfileResponse getUserProfile(AuthUser authUser, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(

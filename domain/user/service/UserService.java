@@ -56,7 +56,7 @@ public class UserService {
             user.updateUserName(request.getUserName());
         }
 
-        return new UserProfileResponse(user.getEmail(), user.getUserName());
+        return new UserProfileResponse(user.getEmail(), user.getUserName(), user.getCreatedAt(), user.getUpdatedAt());
     }
 
     // 유저 비밀번호 수정
@@ -88,6 +88,6 @@ public class UserService {
                 () -> new IllegalStateException("해당 유저가 존재하지 않습니다.")
         );
 
-        return new UserProfileResponse(user.getEmail(), user.getUserName());
+        return new UserProfileResponse(user.getEmail(), user.getUserName(), user.getCreatedAt(), user.getUpdatedAt());
     }
 }

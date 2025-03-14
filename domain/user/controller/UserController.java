@@ -1,5 +1,6 @@
 package com.example.springbasicnewspeed.domain.user.controller;
 
+import com.example.springbasicnewspeed.common.response.MessageResponse;
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
 import com.example.springbasicnewspeed.domain.common.annotation.Auth;
 import com.example.springbasicnewspeed.domain.user.dto.request.PasswordUpdateRequest;
@@ -7,7 +8,9 @@ import com.example.springbasicnewspeed.domain.user.dto.request.UserRequest;
 import com.example.springbasicnewspeed.domain.user.dto.response.UserProfileResponse;
 import com.example.springbasicnewspeed.domain.user.dto.response.UserResponse;
 import com.example.springbasicnewspeed.domain.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,19 +29,22 @@ public class UserController {
 
     // 자기 정보를 자신만 업데이트 가능
     @PatchMapping("/users")
-    public UserProfileResponse update(@Auth AuthUser authUser, @RequestBody UserRequest request) {
-        return userService.update(authUser, request);
+    public ResponseEntity<UserProfileResponse> update(@Auth AuthUser authUser, @RequestBody UserRequest request) {
+        UserProfileResponse response = userService.update(authUser, request);
+        return ResponseEntity.ok(response);
     }
 
     // 유저 비밀번호 수정
     @PatchMapping("/users/password")
-    public void updatePassword(@Auth AuthUser authUser, @RequestBody PasswordUpdateRequest request) {
+    public ResponseEntity<MessageResponse> updatePassword(@Auth AuthUser authUser, @Valid @RequestBody PasswordUpdateRequest request) {
         userService.updatePassword(authUser, request);
+        return ResponseEntity.ok(MessageResponse.of("비밀번호 변경 성공!"));
     }
 
     // 다른 유저 프로필 단건 조회
     @GetMapping("/users/{userId}")
-    public UserProfileResponse getUser(@Auth AuthUser authUser, @PathVariable Long userId) {
-        return userService.getUserProfile(authUser, userId);
+    public ResponseEntity<UserProfileResponse> getUser(@Auth AuthUser authUser, @PathVariable Long userId) {
+        UserProfileResponse response = userService.getUserProfile(authUser, userId);
+        return ResponseEntity.ok(response);
     }
 }

@@ -62,6 +62,20 @@ public class GlobalExceptionHandler {
         return ErrorResponse.of("400", e.getMessage());
     }
 
+    // 유저가 존재하지 않을 때
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UserNotFoundException.class)
+    public ErrorResponse handleUserNotFoundException(UserNotFoundException e) {
+        return ErrorResponse.of("400", e.getMessage());
+    }
+
+    // 비밀번호 변경 시 새 비밀번호와 현재 비밀번호가 동일하지 않을 때
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(SamePasswordException.class)
+    public ErrorResponse handleSamePasswordException(SamePasswordException e) {
+        return ErrorResponse.of("400", e.getMessage());
+    }
+
     // 기타 모든 예외 처리 (서버 에러)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)

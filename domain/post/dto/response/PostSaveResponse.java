@@ -10,14 +10,16 @@ public class PostSaveResponse {
     private final String userName;
     private final String title;
     private final String content;
+    private final int postLikedCount;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public PostSaveResponse(Long id, String userName, String title, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public PostSaveResponse(Long id, String userName, String title, String content, int postLikedCount, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.userName = userName;
         this.title = title;
         this.content = content;
+        this.postLikedCount = postLikedCount;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }

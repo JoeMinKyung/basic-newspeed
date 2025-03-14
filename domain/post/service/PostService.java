@@ -38,6 +38,7 @@ public class PostService {
                 savedPost.getUser().getUserName(),
                 savedPost.getTitle(),
                 savedPost.getContent(),
+                savedPost.getPostLikedCount(),
                 savedPost.getCreatedAt(),
                 savedPost.getUpdatedAt()
         );

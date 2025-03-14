@@ -1,5 +1,6 @@
 package com.example.springbasicnewspeed.domain.post.entity;
 
+import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
 import com.example.springbasicnewspeed.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -59,8 +60,11 @@ public class Post {
         this.user = user;
     }
 
-    public void update(String title, String content) {
+    public void updateTitle(String title) {
         this.title = title;
+    }
+
+    public void updateContent(String content) {
         this.content = content;
     }
 
@@ -82,5 +86,9 @@ public class Post {
 
     public boolean isPostOwner(User user) {
         return this.user.equals(user);
+    }
+
+    public boolean isPostOwnerByAuthUser(AuthUser authUser) {
+        return this.user.getId().equals(authUser.getId());
     }
 }

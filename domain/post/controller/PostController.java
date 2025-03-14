@@ -3,6 +3,7 @@ package com.example.springbasicnewspeed.domain.post.controller;
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
 import com.example.springbasicnewspeed.domain.common.annotation.Auth;
 import com.example.springbasicnewspeed.domain.post.dto.request.PostSaveRequest;
+import com.example.springbasicnewspeed.domain.post.dto.request.PostUpdateRequest;
 import com.example.springbasicnewspeed.domain.post.dto.response.PostLikeResponse;
 import com.example.springbasicnewspeed.domain.post.dto.response.PostResponse;
 import com.example.springbasicnewspeed.domain.post.dto.response.PostSaveResponse;
@@ -42,6 +43,15 @@ public class PostController {
     }
 
     // 포스트 수정 (작성자 본인만 가능)
+    @PatchMapping("/posts/{postId}")
+    public ResponseEntity<PostResponse> updatePost(
+            @Auth AuthUser authUser,
+            @PathVariable Long postId,
+            @Valid @RequestBody PostUpdateRequest request
+    ) {
+        PostResponse updatedPost = postService.updatePost(authUser, postId, request.getTitle(), request.getContent());
+        return ResponseEntity.ok(updatedPost);
+    }
 
     // 포스트 삭제 (작성자 본인만 가능)
 

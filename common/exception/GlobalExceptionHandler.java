@@ -76,6 +76,20 @@ public class GlobalExceptionHandler {
         return ErrorResponse.of("400", e.getMessage());
     }
 
+    // 포스트가 존재하지 않을 때
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PostNotFoundException.class)
+    public ErrorResponse handlePostNotFoundException(PostNotFoundException e) {
+        return ErrorResponse.of("400", e.getMessage());
+    }
+
+    // 본인 게시물에 좋아요를 누를 때
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(CannotLikeOwnPostException.class)
+    public ErrorResponse handleCannotLikeOwnPostException(CannotLikeOwnPostException e) {
+        return ErrorResponse.of("400", e.getMessage());
+    }
+
     // 기타 모든 예외 처리 (서버 에러)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)

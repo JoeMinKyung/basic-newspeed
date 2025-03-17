@@ -21,7 +21,7 @@ public class PostLikeService {
     private final UserRepository userRepository;
 
     @Transactional
-    public PostLikeResponse toggleLike(AuthUser authUser, Long postId) {
+    public PostLikeResponse togglePostLike(AuthUser authUser, Long postId) {
 
         User user = userRepository.findByEmail(authUser.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));

@@ -1,6 +1,7 @@
 package com.example.springbasicnewspeed.domain.comment.entity;
 
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
+import com.example.springbasicnewspeed.domain.like.entity.CommentLike;
 import com.example.springbasicnewspeed.domain.post.entity.Post;
 import com.example.springbasicnewspeed.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -44,13 +45,8 @@ public class Comment {
     @Column(nullable = false)
     private int commentLikedCount = 0;
 
-    @ManyToMany
-    @JoinTable(
-            name = "comment_likes",
-            joinColumns = @JoinColumn(name = "comment_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<User> commentLikedUsers = new HashSet<>();
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CommentLike> commentLikes = new HashSet<>();
 
     public Comment(String content, User user, Post post) {
         this.content = content;
@@ -62,27 +58,11 @@ public class Comment {
         this.content = content;
     }
 
-    public void addLike(User user) {
-        commentLikedUsers.add(user);
-    }
-
-    public void removeLike(User user) {
-        commentLikedUsers.remove(user);
+    public boolean isCommentOwnerByAuthUser(AuthUser authUser) {
+        return this.user.getId().equals(authUser.getId());
     }
 
     public void updateCommentLikedCount(int count) {
         this.commentLikedCount = count;
-    }
-
-    public int getCommentLikedCount() {
-        return commentLikedUsers.size();
-    }
-
-    public boolean isCommentOwner(User user) {
-        return this.user.equals(user);
-    }
-
-    public boolean isCommentOwnerByAuthUser(AuthUser authUser) {
-        return this.user.getId().equals(authUser.getId());
     }
 }

@@ -2,6 +2,7 @@ package com.example.springbasicnewspeed.domain.post.entity;
 
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
 import com.example.springbasicnewspeed.domain.comment.entity.Comment;
+import com.example.springbasicnewspeed.domain.like.entity.PostLike;
 import com.example.springbasicnewspeed.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,7 +10,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,6 +38,9 @@ public class Post {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    @Column(nullable = false)
+    private int postLikedCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -45,17 +48,8 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
-    @Column(nullable = false)
-    private int postLikedCount = 0;
-
-    @ManyToMany
-    @JoinTable(
-            name = "post_likes",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<User> postLikedUsers = new HashSet<>();
-
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<PostLike> postLikes = new HashSet<>();
 
     public Post(String title, String content, User user) {
         this.title = title;
@@ -71,27 +65,11 @@ public class Post {
         this.content = content;
     }
 
-    public void addLike(User user) {
-        postLikedUsers.add(user);
-    }
-
-    public void removeLike(User user) {
-        postLikedUsers.remove(user);
+    public boolean isPostOwnerByAuthUser(AuthUser authUser) {
+        return this.user.getId().equals(authUser.getId());
     }
 
     public void updatePostLikedCount(int count) {
         this.postLikedCount = count;
-    }
-
-    public int getPostLikedCount() {
-        return postLikedUsers.size();
-    }
-
-    public boolean isPostOwner(User user) {
-        return this.user.equals(user);
-    }
-
-    public boolean isPostOwnerByAuthUser(AuthUser authUser) {
-        return this.user.getId().equals(authUser.getId());
     }
 }

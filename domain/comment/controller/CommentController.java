@@ -4,15 +4,12 @@ import com.example.springbasicnewspeed.common.response.MessageResponse;
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
 import com.example.springbasicnewspeed.domain.comment.dto.request.CommentSaveRequest;
 import com.example.springbasicnewspeed.domain.comment.dto.request.CommentUpdateRequest;
-import com.example.springbasicnewspeed.domain.comment.dto.response.CommentLikeResponse;
 import com.example.springbasicnewspeed.domain.comment.dto.response.CommentResponse;
 import com.example.springbasicnewspeed.domain.comment.dto.response.CommentSaveResponse;
-import com.example.springbasicnewspeed.domain.comment.service.CommentLikeService;
 import com.example.springbasicnewspeed.domain.comment.service.CommentService;
 import com.example.springbasicnewspeed.domain.common.annotation.Auth;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +20,6 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
-    private final CommentLikeService commentLikeService;
 
     // 댓글 생성
     @PostMapping("/posts/{postId}/comments")
@@ -53,7 +49,6 @@ public class CommentController {
         return ResponseEntity.ok(updatedComment);
     }
 
-
     // 댓글 삭제 (작성자 본인만 가능)
     @DeleteMapping("/posts/{postId}/comments/{commentId}")
     public ResponseEntity<MessageResponse> deleteComment(
@@ -62,15 +57,5 @@ public class CommentController {
     ) {
         commentService.deleteComment(authUser, commentId);
         return ResponseEntity.ok(MessageResponse.of("댓글이 삭제되었습니다!"));
-    }
-
-    // 좋아요 토글 (좋아요 추가/제거)
-    @PatchMapping("/posts/{postId}/comments/{commentId}/likes")
-    public ResponseEntity<CommentLikeResponse> likeComment(
-            @Auth AuthUser authUser,
-            @PathVariable Long commentId
-    ) {
-        CommentLikeResponse response = commentLikeService.toggleCommentLike(authUser, commentId);
-        return ResponseEntity.ok(response);
     }
 }

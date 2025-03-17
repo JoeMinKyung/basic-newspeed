@@ -10,8 +10,6 @@ import com.example.springbasicnewspeed.domain.post.dto.response.PostResponse;
 import com.example.springbasicnewspeed.domain.post.dto.response.PostSaveResponse;
 import com.example.springbasicnewspeed.domain.post.entity.Post;
 import com.example.springbasicnewspeed.domain.post.repository.PostRepository;
-import com.example.springbasicnewspeed.domain.user.dto.response.UserNameResponse;
-import com.example.springbasicnewspeed.domain.user.dto.response.UserResponse;
 import com.example.springbasicnewspeed.domain.user.entity.User;
 import com.example.springbasicnewspeed.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +31,6 @@ public class PostService {
 
     @Transactional
     public PostSaveResponse savePost(AuthUser authUser, PostSaveRequest request) {
-
         User user = userRepository.findById(authUser.getId())
                 .orElseThrow(() -> new UserNotFoundException("현재 로그인한 유저를 찾을 수 없습니다."));
 

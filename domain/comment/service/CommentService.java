@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -43,5 +46,30 @@ public class CommentService {
                 savedComment.getCommentLikedCount(),
                 savedComment.getCreatedAt(),
                 savedComment.getUpdatedAt());
+    }
+
+    @Transactional(readOnly = true)
+    public List<CommentSaveResponse> getComments(Long postId) {
+        List<Comment> commentList = commentRepository.findByPostIdWithUser(postId);
+
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new PostNotFoundException("포스트를 찾을 수 없습니다.")
+        );
+
+        List<CommentSaveResponse> dtoList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            User user = comment.getUser();
+            CommentSaveResponse dto = new CommentSaveResponse(
+                    comment.getId(),
+                    post.getId(),
+                    user.getUserName(),
+                    comment.getContent(),
+                    comment.getCommentLikedCount(),
+                    comment.getCreatedAt(),
+                    comment.getUpdatedAt()
+            );
+            dtoList.add(dto);
+        }
+        return dtoList;
     }
 }

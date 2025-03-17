@@ -1,5 +1,6 @@
 package com.example.springbasicnewspeed.domain.user.entity;
 
+import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,6 +40,16 @@ public class User {
         this.email = email;
         this.password = password;
         this.userName = userName;
+    }
+
+    public User(Long id, String email, String userName) {
+        this.id = id;
+        this.email = email;
+        this.userName = userName;
+    }
+
+    public static User fromAuthUser(AuthUser authUser) {
+        return new User(authUser.getId(), authUser.getEmail(), authUser.getUserName());
     }
 
     public void updateEmail(String email) {

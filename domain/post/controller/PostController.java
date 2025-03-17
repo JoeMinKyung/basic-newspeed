@@ -41,6 +41,17 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
+    // 팔로우한 사람들의 포스트 조회
+    @GetMapping("/followed")
+    public ResponseEntity<PageResponse<PostResponse>> getPostsByFollowedUsers(
+            @Auth AuthUser authUser,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        PageResponse<PostResponse> response = postService.getPostsByFollowedUsers(authUser, page, size);
+        return ResponseEntity.ok(response);
+    }
+
     // 포스트 수정 (작성자 본인만 가능)
     @PatchMapping("/posts/{postId}")
     public ResponseEntity<PostResponse> updatePost(

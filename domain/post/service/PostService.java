@@ -4,6 +4,7 @@ import com.example.springbasicnewspeed.common.exception.PostNotFoundException;
 import com.example.springbasicnewspeed.common.exception.UnauthorizedPostException;
 import com.example.springbasicnewspeed.common.exception.UserNotFoundException;
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
+import com.example.springbasicnewspeed.domain.follow.repository.FollowRepository;
 import com.example.springbasicnewspeed.domain.post.dto.request.PostSaveRequest;
 import com.example.springbasicnewspeed.domain.post.dto.response.PageResponse;
 import com.example.springbasicnewspeed.domain.post.dto.response.PostResponse;
@@ -28,6 +29,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final FollowRepository followRepository;
 
     @Transactional
     public PostSaveResponse savePost(AuthUser authUser, PostSaveRequest request) {
@@ -68,6 +70,28 @@ public class PostService {
                 post.getCreatedAt(),
                 post.getUpdatedAt()
         )).collect(Collectors.toList());
+
+        return new PageResponse<>(postResponses, page, posts.getSize(), posts.getTotalPages(), posts.getTotalElements());
+    }
+
+    public PageResponse<PostResponse> getPostsByFollowedUsers(AuthUser authUser, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        List<Long> followedUserIds = followRepository.findFollowedUserIdsByFollowerId(authUser.getId());
+
+        Page<Post> posts = postRepository.findByUserIdInOrderByCreatedAtDesc(followedUserIds, pageable);
+
+        List<PostResponse> postResponses = posts.stream()
+                .map(post -> new PostResponse(
+                        post.getId(),
+                        post.getUser().getUserName(),
+                        post.getTitle(),
+                        post.getContent(),
+                        post.getPostLikedCount(),
+                        post.getCreatedAt(),
+                        post.getUpdatedAt()
+                ))
+                .collect(Collectors.toList());
 
         return new PageResponse<>(postResponses, page, posts.getSize(), posts.getTotalPages(), posts.getTotalElements());
     }

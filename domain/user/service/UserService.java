@@ -3,6 +3,7 @@ package com.example.springbasicnewspeed.domain.user.service;
 import com.example.springbasicnewspeed.common.exception.*;
 import com.example.springbasicnewspeed.config.PasswordEncoder;
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
+import com.example.springbasicnewspeed.domain.follow.repository.FollowRepository;
 import com.example.springbasicnewspeed.domain.user.dto.request.PasswordUpdateRequest;
 import com.example.springbasicnewspeed.domain.user.dto.request.UserRequest;
 import com.example.springbasicnewspeed.domain.user.dto.response.UserProfileResponse;
@@ -23,6 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FollowRepository followRepository;
 
     @Transactional(readOnly = true)
     public List<UserResponse> findAll() {
@@ -30,7 +32,19 @@ public class UserService {
 
         List<UserResponse> response = new ArrayList<>();
         for (User user : users) {
-            response.add(new UserResponse(user.getId(), user.getEmail(), user.getUserName(), user.getPassword()));
+            int followerCount = followRepository.countByFollowed(user);
+            int followingCount = followRepository.countByFollower(user);
+
+            response.add(new UserResponse(
+                    user.getId(),
+                    user.getEmail(),
+                    user.getUserName(),
+                    user.getPassword(),
+                    followerCount,
+                    followingCount,
+                    user.getCreatedAt(),
+                    user.getUpdatedAt()
+            ));
         }
         return response;
     }
@@ -56,7 +70,16 @@ public class UserService {
             user.updateUserName(request.getUserName());
         }
 
-        return new UserProfileResponse(user.getEmail(), user.getUserName(), user.getCreatedAt(), user.getUpdatedAt());
+        int followerCount = followRepository.countByFollowed(user);
+        int followingCount = followRepository.countByFollower(user);
+
+        return new UserProfileResponse(
+                user.getEmail(),
+                user.getUserName(),
+                followerCount,
+                followingCount,
+                user.getCreatedAt(),
+                user.getUpdatedAt());
     }
 
     // 유저 비밀번호 수정
@@ -88,6 +111,15 @@ public class UserService {
                 () -> new IllegalStateException("해당 유저가 존재하지 않습니다.")
         );
 
-        return new UserProfileResponse(user.getEmail(), user.getUserName(), user.getCreatedAt(), user.getUpdatedAt());
+        int followerCount = followRepository.countByFollowed(user);
+        int followingCount = followRepository.countByFollower(user);
+
+        return new UserProfileResponse(
+                user.getEmail(),
+                user.getUserName(),
+                followerCount,
+                followingCount,
+                user.getCreatedAt(),
+                user.getUpdatedAt());
     }
 }

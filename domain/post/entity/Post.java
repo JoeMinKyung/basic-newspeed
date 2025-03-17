@@ -53,7 +53,7 @@ public class Post {
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> likedUsers = new HashSet<>();
+    private Set<User> postLikedUsers = new HashSet<>();
 
 
     public Post(String title, String content, User user) {
@@ -71,11 +71,11 @@ public class Post {
     }
 
     public void addLike(User user) {
-        likedUsers.add(user);
+        postLikedUsers.add(user);
     }
 
     public void removeLike(User user) {
-        likedUsers.remove(user);
+        postLikedUsers.remove(user);
     }
 
     public void updatePostLikedCount(int count) {
@@ -83,7 +83,7 @@ public class Post {
     }
 
     public int getPostLikedCount() {
-        return likedUsers.size();
+        return postLikedUsers.size();
     }
 
     public boolean isPostOwner(User user) {

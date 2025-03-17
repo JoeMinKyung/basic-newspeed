@@ -113,4 +113,16 @@ public class CommentService {
                 comment.getCreatedAt(),
                 comment.getUpdatedAt());
     }
+
+    // 댓글 삭제
+    public void deleteComment(AuthUser authUser, Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new PostNotFoundException("댓글을 찾을 수 없습니다."));
+
+        if(!comment.isCommentOwnerByAuthUser(authUser)) {
+            throw new UnauthorizedPostException("작성자만 삭제할 수 있습니다.");
+        }
+
+        commentRepository.delete(comment);
+    }
 }

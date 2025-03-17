@@ -1,5 +1,6 @@
 package com.example.springbasicnewspeed.domain.comment.controller;
 
+import com.example.springbasicnewspeed.common.response.MessageResponse;
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
 import com.example.springbasicnewspeed.domain.comment.dto.request.CommentSaveRequest;
 import com.example.springbasicnewspeed.domain.comment.dto.request.CommentUpdateRequest;
@@ -51,7 +52,14 @@ public class CommentController {
 
 
     // 댓글 삭제 (작성자 본인만 가능)
-
+    @DeleteMapping("/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<MessageResponse> deleteComment(
+            @Auth AuthUser authUser,
+            @PathVariable Long commentId
+    ) {
+        commentService.deleteComment(authUser, commentId);
+        return ResponseEntity.ok(MessageResponse.of("댓글이 삭제되었습니다!"));
+    }
     // 좋아요 토글 (좋아요 추가/제거)
 
 }

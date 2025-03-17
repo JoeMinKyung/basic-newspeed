@@ -1,6 +1,7 @@
 package com.example.springbasicnewspeed.domain.post.entity;
 
 import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
+import com.example.springbasicnewspeed.domain.comment.entity.Comment;
 import com.example.springbasicnewspeed.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -39,8 +41,8 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-//    @OneToMany(mappedBy = "todo", cascade = CascadeType.REMOVE)
-//    private List<Comment> comments;
+    @OneToMany(mappedBy = "todo", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
 
     @Column(nullable = false)
     private int postLikedCount = 0;

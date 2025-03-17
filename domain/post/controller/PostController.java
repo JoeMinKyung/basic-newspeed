@@ -65,12 +65,12 @@ public class PostController {
     }
 
     // 좋아요 토글 (좋아요 추가/제거)
-    @PatchMapping("/posts/likes/{postId}")
+    @PatchMapping("/posts/{postId}/likes")
     public ResponseEntity<PostLikeResponse> likePost(
             @Auth AuthUser authUser,
             @PathVariable Long postId
     ) {
-        PostLikeResponse response = postLikeService.toggleLike(authUser, postId);
+        PostLikeResponse response = postLikeService.togglePostLike(authUser, postId);
         return ResponseEntity.ok(response);
     }
 }

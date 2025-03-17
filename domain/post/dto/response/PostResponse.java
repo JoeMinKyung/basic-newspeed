@@ -1,15 +1,13 @@
 package com.example.springbasicnewspeed.domain.post.dto.response;
 
-import com.example.springbasicnewspeed.domain.user.dto.response.UserNameResponse;
 import lombok.Getter;
-
 import java.time.LocalDateTime;
 
 @Getter
 public class PostResponse {
 
     private final Long id;
-    private String userName;
+    private final String userName;
     private final String title;
     private final String content;
     private final int postLikedCount;

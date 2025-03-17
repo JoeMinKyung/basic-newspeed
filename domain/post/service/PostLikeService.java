@@ -33,7 +33,7 @@ public class PostLikeService {
             throw new CannotLikeOwnPostException("본인의 게시물에 좋아요를 누를 수 없습니다.");
         }
 
-        boolean currentlyPostLiked = post.getLikedUsers().contains(user);
+        boolean currentlyPostLiked = post.getPostLikedUsers().contains(user);
 
         if (currentlyPostLiked) {
             // 좋아요 취소
@@ -44,7 +44,7 @@ public class PostLikeService {
         }
 
         // 좋아요 수 업데이트
-        post.updatePostLikedCount(post.getLikedUsers().size());
+        post.updatePostLikedCount(post.getPostLikedUsers().size());
 
         // 변경사항 저장
         postRepository.save(post);

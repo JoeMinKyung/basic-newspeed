@@ -47,4 +47,11 @@ public class UserController {
         UserProfileResponse response = userService.getUserProfile(authUser, userId);
         return ResponseEntity.ok(response);
     }
+
+    // 본인 프로필 단건 조회
+    @GetMapping("/users")
+    public ResponseEntity<UserProfileResponse> getMyProfile(@Auth AuthUser authUser) {
+        UserProfileResponse response = userService.getUserProfile(authUser, authUser.getId());
+        return ResponseEntity.ok(response);
+    }
 }

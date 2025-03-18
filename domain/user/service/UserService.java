@@ -26,6 +26,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
 
+    // 프로필 전체 조회
     @Transactional(readOnly = true)
     public List<UserResponse> findAll() {
         List<User> users = userRepository.findAll();

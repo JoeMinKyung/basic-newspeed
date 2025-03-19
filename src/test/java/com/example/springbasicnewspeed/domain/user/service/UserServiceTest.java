@@ -19,9 +19,9 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -70,5 +70,36 @@ public class UserServiceTest {
                 () -> userService.getUserProfile(authUser, userId),
                 "존재하지 않는 유저입니다."
         );
+    }
+
+    @Test
+    void User를_삭제할_수_있다() {
+        // given
+        String email = "test@gmail.com";
+        long userId = 1L;
+        String userName = "test";
+        AuthUser authUser = new AuthUser(userId, email, userName);
+        given(userRepository.existsById(anyLong())).willReturn(true);
+        doNothing().when(userRepository).deleteById(anyLong());
+
+        // when
+        userService.deleteUser(authUser);
+
+        // then
+        verify(userRepository, times(1)).deleteById(userId);
+    }
+
+    @Test
+    void 존재하지_않는_User를_삭제_시_UserNotFoundException를_던진다() {
+        // given
+        String email = "test@gmail.com";
+        long userId = 1L;
+        String userName = "test";
+        AuthUser authUser = new AuthUser(userId, email, userName);
+        given(userRepository.existsById(userId)).willReturn(false);
+
+        // when & then
+        assertThrows(UserNotFoundException.class, () -> userService.deleteUser(authUser));
+        verify(userRepository, never()).deleteById(userId);
     }
 }

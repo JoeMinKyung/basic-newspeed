@@ -28,7 +28,8 @@ public class PostController {
             @Auth AuthUser authUser,
             @Valid @RequestBody PostSaveRequest request
     ) {
-        return ResponseEntity.ok(postService.savePost(authUser, request));
+        PostSaveResponse postSaveResponse = postService.savePost(authUser, request);
+        return ResponseEntity.ok(postSaveResponse);
     }
 
     // 포스트 조회

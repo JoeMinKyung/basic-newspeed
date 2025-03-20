@@ -7,4 +7,9 @@ public class PostUpdateRequest {
 
     private String title;
     private String content;
+
+    public PostUpdateRequest(String newTitle, String newContent) {
+        this.title = newTitle;
+        this.content = newContent;
+    }
 }

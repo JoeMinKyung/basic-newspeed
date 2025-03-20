@@ -49,9 +49,16 @@ public class UserController {
     }
 
     // 본인 프로필 단건 조회
-    @GetMapping("/users")
+    @GetMapping("/users/me")
     public ResponseEntity<UserProfileResponse> getMyProfile(@Auth AuthUser authUser) {
         UserProfileResponse response = userService.getUserProfile(authUser, authUser.getId());
         return ResponseEntity.ok(response);
+    }
+
+    // 유저 본인 탈퇴
+    @DeleteMapping("/users")
+    public ResponseEntity<MessageResponse> deleteUser(@Auth AuthUser authUser) {
+        userService.deleteUser(authUser);
+        return ResponseEntity.ok(MessageResponse.of("회원 탈퇴 성공!"));
     }
 }

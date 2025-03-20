@@ -5,11 +5,11 @@ import com.example.springbasicnewspeed.domain.comment.entity.Comment;
 import com.example.springbasicnewspeed.domain.like.entity.PostLike;
 import com.example.springbasicnewspeed.domain.user.entity.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +19,7 @@ import java.util.Set;
 @Getter
 @Entity
 @NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
+@AllArgsConstructor
 @Table(name = "posts")
 public class Post {
     @Id
@@ -52,6 +52,13 @@ public class Post {
     private Set<PostLike> postLikes = new HashSet<>();
 
     public Post(String title, String content, User user) {
+        this.title = title;
+        this.content = content;
+        this.user = user;
+    }
+
+    public Post(Long id, String title, String content, User user) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.user = user;

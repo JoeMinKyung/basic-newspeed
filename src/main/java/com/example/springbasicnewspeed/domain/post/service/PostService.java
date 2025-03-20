@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,6 +56,7 @@ public class PostService {
         );
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<PostResponse> getPosts(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
 
@@ -74,6 +76,7 @@ public class PostService {
         return new PageResponse<>(postResponses, page, posts.getSize(), posts.getTotalPages(), posts.getTotalElements());
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<PostResponse> getPostsByFollowedUsers(AuthUser authUser, int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
 
@@ -96,6 +99,7 @@ public class PostService {
         return new PageResponse<>(postResponses, page, posts.getSize(), posts.getTotalPages(), posts.getTotalElements());
     }
 
+    @Transactional
     public PostResponse updatePost(AuthUser authUser, Long postId, String title, String content) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(
@@ -131,6 +135,7 @@ public class PostService {
         );
     }
 
+    @Transactional
     public void deletePost(Long postId, AuthUser authUser) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("게시물을 찾을 수 없습니다."));

@@ -1,18 +1,28 @@
 package com.example.springbasicnewspeed.domain.user.controller;
 
+import com.example.springbasicnewspeed.domain.auth.dto.AuthUser;
+import com.example.springbasicnewspeed.domain.user.dto.request.PasswordUpdateRequest;
+import com.example.springbasicnewspeed.domain.user.dto.request.UserRequest;
+import com.example.springbasicnewspeed.domain.user.dto.response.UserProfileResponse;
 import com.example.springbasicnewspeed.domain.user.dto.response.UserResponse;
 import com.example.springbasicnewspeed.domain.user.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -21,6 +31,9 @@ public class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockitoBean
     private UserService userService;
@@ -71,18 +84,72 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$[1].email").value(email2));
     }
 
-//    @Test
-//    void User_단건_조회() throws Exception {
-//        // given
-//        long userId = 1L;
-//        String email = "a@a.com";
-//
-//        given(userService.getUser(userId)).willReturn(new UserResponse(userId, email));
-//
-//        // when & then
-//        mockMvc.perform(get("/users/{userId}", userId))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(userId))
-//                .andExpect(jsonPath("$.email").value(email));
-//    }
+    @Test
+    void User_정보_수정() throws Exception {
+        // given
+        long userId = 1L;
+        String email = "user@a.com";
+        String password = "password";
+        String userName = "UpdatedUser";
+        LocalDateTime createdAt = LocalDateTime.now();
+        LocalDateTime updatedAt = LocalDateTime.now();
+        int followerCount = 10;
+        int followingCount = 5;
+
+        UserRequest request = new UserRequest(email, password, userName);
+        UserProfileResponse response = new UserProfileResponse(email, userName, followerCount, followingCount, createdAt, updatedAt);
+
+        given(userService.update(any(AuthUser.class), any(UserRequest.class))).willReturn(response);
+
+        // when & then
+        mockMvc.perform(get("/users")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    void User_비밀번호_수정() throws Exception {
+        // given
+        String currentPassword = "currentPassword1!!";
+        String newPassword = "newPassword1!!";
+
+        PasswordUpdateRequest request = new PasswordUpdateRequest(currentPassword, newPassword, newPassword);
+
+        doNothing().when(userService).updatePassword(any(AuthUser.class), any(PasswordUpdateRequest.class));
+
+        // when & then
+        mockMvc.perform(patch("/users/password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("비밀번호 변경 성공!"));
+    }
+
+
+    @Test
+    void User_단건_조회() throws Exception {
+        // given
+        long authUserId = 1L;
+        long userId = 2L;
+        String email = "test@mail.com";
+        String password = "currentPassword1!!";
+        String userName = "UpdatedUser";
+        LocalDateTime createdAt = LocalDateTime.now();
+        LocalDateTime updatedAt = LocalDateTime.now();
+        int followerCount = 10;
+        int followingCount = 5;
+        AuthUser mockAuthUser = new AuthUser(authUserId, email, password);
+
+        given(userService.getUserProfile(any(AuthUser.class), eq(userId)))
+                .willReturn(new UserProfileResponse(email, userName, followerCount, followingCount, createdAt, updatedAt));
+
+        // when & then
+        mockMvc.perform(get("/users/{userId}", userId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value(email))
+                .andExpect(jsonPath("$.userName").value(userName))
+                .andExpect(jsonPath("$.followerCount").value(followerCount))
+                .andExpect(jsonPath("$.followingCount").value(followingCount));
+    }
 }

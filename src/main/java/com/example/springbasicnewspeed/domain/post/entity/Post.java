@@ -72,4 +72,8 @@ public class Post {
     public void updatePostLikedCount(int count) {
         this.postLikedCount = count;
     }
+
+    public void updateCreatedAt(LocalDateTime localDateTime) {
+        this.createdAt = localDateTime;
+    }
 }

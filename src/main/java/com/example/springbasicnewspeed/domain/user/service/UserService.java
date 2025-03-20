@@ -103,13 +103,14 @@ public class UserService {
         }
 
         user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 
     // 다른 유저 프로필 단건 조회
     @Transactional(readOnly = true)
     public UserProfileResponse getUserProfile(AuthUser authUser, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalStateException("해당 유저가 존재하지 않습니다.")
+                () -> new UserNotFoundException("존재하지 않는 유저입니다.")
         );
 
         int followerCount = followRepository.countByFollowed(user);
@@ -122,5 +123,14 @@ public class UserService {
                 followingCount,
                 user.getCreatedAt(),
                 user.getUpdatedAt());
+    }
+
+    // 유저 삭제
+    @Transactional
+    public void deleteUser(AuthUser authUser) {
+        if (!userRepository.existsById(authUser.getId())) {
+            throw new UserNotFoundException("존재하지 않는 유저입니다.");
+        }
+        userRepository.deleteById(authUser.getId());
     }
 }

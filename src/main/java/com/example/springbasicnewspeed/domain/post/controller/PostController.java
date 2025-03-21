@@ -12,8 +12,10 @@ import com.example.springbasicnewspeed.domain.post.dto.response.PostSaveResponse
 import com.example.springbasicnewspeed.domain.post.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
 
 
 @RestController
@@ -36,9 +38,12 @@ public class PostController {
     @GetMapping("/posts")
     public ResponseEntity<PageResponse<PostResponse>> getPosts(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate
     ) {
-        PageResponse<PostResponse> response = postService.getPosts(page, size);
+        PageResponse<PostResponse> response = postService.getPosts(page, size, sort, startDate, endDate);
         return ResponseEntity.ok(response);
     }
 

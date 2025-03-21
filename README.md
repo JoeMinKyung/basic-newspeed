@@ -75,8 +75,94 @@ com.example.springbasicnewspeed
 
 ## API 동작 
 
-- 회원가입
-  ![image](https://github.com/user-attachments/assets/1ef89f89-8474-41bd-aa55-7e439027e6c1)
+### 회원가입
 
-- 
+![image](https://github.com/user-attachments/assets/1ef89f89-8474-41bd-aa55-7e439027e6c1)
+
+<br>
+
+### 로그인
+
+![image](https://github.com/user-attachments/assets/518d2970-df9d-4c27-9695-142dcc5ee87c)
+
+<br>
+
+### 전체 유저 조회(admin)
+![image](https://github.com/user-attachments/assets/c05d2516-c070-4393-881a-9929d106b848)
+
+<br>
+
+### 회원 프로필 단건 조회(user)
+![image](https://github.com/user-attachments/assets/35441f83-5b46-4eca-a637-53333d3d0845)
+
+<br>
+
+### 유저 프로필 수정(이메일, 닉네임)
+![image](https://github.com/user-attachments/assets/38016111-081b-48d5-b3cf-245fddf8d498)
+
+<br>
+
+### 유저 프로필 수정(비밀번호)
+![image](https://github.com/user-attachments/assets/6a3e16f8-8039-41e6-a0cc-0add4ec45235)
+
+<br>
+
+### 포스트 생성
+
+![image](https://github.com/user-attachments/assets/5026bb73-91b9-4599-82b7-84dc23f1dc84)
+
+<br>
+
+### 포스트 조회
+
+![image](https://github.com/user-attachments/assets/fb9a0f0b-fb8b-46f7-8c4a-24d601110a21)
+
+
+<br>
+
+### 포스트 수정
+
+
+<br>
+
+
+### 포스트 삭제
+
+<br>
+
+### 댓글 생성
+
+<br>
+
+### 댓글 조회
+
+<br>
+
+### 댓글 수정
+
+<br>
+
+### 댓글 삭제
+
+<br>
+
+### 포스트 좋아요
+
+<br>
+
+### 댓글 좋아요
+
+<br>
+
+### 팔로우
+
+<br>
+
+### 팔로우 포스트 조회
+
+<br>
+
+
+
+
 

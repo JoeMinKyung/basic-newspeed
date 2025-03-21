@@ -20,8 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,24 +58,48 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<PostResponse> getPosts(int page, int size) {
+    public PageResponse<PostResponse> getPosts(
+            int page,
+            int size,
+            String sort,
+            LocalDate startDate,
+            LocalDate endDate
+    ) {
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        Page<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+        Page<Post> posts;
+        if (startDate != null && endDate != null) {
+            // LocalDate를 LocalDateTime으로 변환
+            LocalDateTime startDateTime = startDate.atStartOfDay();
+            LocalDateTime endDateTime = endDate.atTime(23, 59, 59, 999999999); // endDate = 23:59:59
+
+            // 기간별 검색
+            posts = postRepository.findAllByCreatedAtBetweenOrderByCreatedAtDesc(startDateTime, endDateTime, pageable);
+        } else if ("likes".equals(sort)) {
+            // 좋아요 많은 순
+            posts = postRepository.findAllByOrderByPostLikedCountDesc(pageable);
+        } else if ("updatedAt".equals(sort)) {
+            // 수정일 기준 최신순 정렬
+            posts = postRepository.findAllByOrderByUpdatedAtDesc(pageable);
+        } else {
+            // 기본 정렬 (생성일 기준 최신순)
+            posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+        }
 
         List<PostResponse> postResponses = posts.stream()
                 .map(post -> new PostResponse(
-                post.getId(),
-                post.getUser().getUserName(),
-                post.getTitle(),
-                post.getContent(),
-                post.getPostLikedCount(),
-                post.getCreatedAt(),
-                post.getUpdatedAt()
-        )).collect(Collectors.toList());
+                        post.getId(),
+                        post.getUser().getUserName(),
+                        post.getTitle(),
+                        post.getContent(),
+                        post.getPostLikedCount(),
+                        post.getCreatedAt(),
+                        post.getUpdatedAt()
+                )).collect(Collectors.toList());
 
         return new PageResponse<>(postResponses, page, posts.getSize(), posts.getTotalPages(), posts.getTotalElements());
     }
+
 
     @Transactional(readOnly = true)
     public PageResponse<PostResponse> getPostsByFollowedUsers(AuthUser authUser, int page, int size) {

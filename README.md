@@ -63,12 +63,12 @@ com.example.springbasicnewspeed
 ├── config
 │   ├── argument
 │   ├── filter
-├── domain
-│   ├── auth
-│   ├── comment
-│   ├── follow
-│   ├── post
-│   ├── user
+└── domain
+    ├── auth
+    ├── comment
+    ├── follow
+    ├── post
+    ├── user
 ```
 
 <br>

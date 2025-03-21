@@ -65,7 +65,7 @@ public class PostController {
     }
 
     // 포스트 삭제 (작성자 본인만 가능)
-    @DeleteMapping("/post/{postId}")
+    @DeleteMapping("/posts/{postId}")
     public ResponseEntity<MessageResponse> deletePost(
             @Auth AuthUser authUser,
             @PathVariable Long postId

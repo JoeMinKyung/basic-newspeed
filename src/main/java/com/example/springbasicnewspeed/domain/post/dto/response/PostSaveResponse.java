@@ -12,26 +12,26 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PostSaveResponse {
 
-    @JsonProperty("id")  // 이 어노테이션을 추가해 봅니다
+    @JsonProperty("id")
     private final Long id;
 
-    @JsonProperty("userName")  // 이 어노테이션을 추가해 봅니다
+    @JsonProperty("userName")
     private final String userName;
 
-    @JsonProperty("title")  // 이 어노테이션을 추가해 봅니다
+    @JsonProperty("title")
     private final String title;
 
-    @JsonProperty("content")  // 이 어노테이션을 추가해 봅니다
+    @JsonProperty("content")
     private final String content;
 
-    @JsonProperty("postLikedCount")  // 이 어노테이션을 추가해 봅니다
+    @JsonProperty("postLikedCount")
     private final int postLikedCount;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonProperty("createdAt")
     private final LocalDateTime createdAt;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonProperty("updatedAt")
     private final LocalDateTime updatedAt;
 }

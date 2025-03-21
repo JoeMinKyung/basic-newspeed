@@ -200,7 +200,7 @@ public class PostControllerTest {
         AuthUser authUser = new AuthUser(1L, "user@example.com", "password");
 
         // when & then
-        mockMvc.perform(delete("/post/{postId}", postId)
+        mockMvc.perform(delete("/posts/{postId}", postId)
                         .header("Authorization", "Bearer mockToken"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("포스트가 삭제되었습니다!"));

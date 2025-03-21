@@ -122,43 +122,70 @@ com.example.springbasicnewspeed
 
 ### 포스트 수정
 
+![image](https://github.com/user-attachments/assets/95daa742-089e-4575-93bd-70fdd9e3ce1f)
+
 
 <br>
 
 
 ### 포스트 삭제
 
+
+![image](https://github.com/user-attachments/assets/3d8de07e-4f88-45f9-94b1-1716b1f7a511)
+
 <br>
 
 ### 댓글 생성
+
+![image](https://github.com/user-attachments/assets/138029a5-d527-4576-b23f-8d81c5c9b1e2)
+
 
 <br>
 
 ### 댓글 조회
 
+![image](https://github.com/user-attachments/assets/f65f1238-983b-4692-9509-e494c4a16e73)
+
 <br>
 
 ### 댓글 수정
+
+![image](https://github.com/user-attachments/assets/af29563e-ad3a-476a-af10-dc30c24efe47)
+
 
 <br>
 
 ### 댓글 삭제
 
+![image](https://github.com/user-attachments/assets/26271a2d-7c4b-47ab-bd7b-940c68025ba1)
+
+
 <br>
 
 ### 포스트 좋아요
+
+![image](https://github.com/user-attachments/assets/5119842d-d503-4f93-8590-575044899e25)
+
 
 <br>
 
 ### 댓글 좋아요
 
+![image](https://github.com/user-attachments/assets/5bc65396-7c69-4112-83b5-e9846ded8f07)
+
+
 <br>
 
 ### 팔로우
 
+![image](https://github.com/user-attachments/assets/fe7cc507-e19f-433f-af62-e366729d435e)
+
 <br>
 
 ### 팔로우 포스트 조회
+
+![image](https://github.com/user-attachments/assets/c7fb844e-b0c4-45c9-afba-8e842b938d8f)
+
 
 <br>
 

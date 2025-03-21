@@ -16,12 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -113,7 +109,7 @@ public class PostControllerTest {
 
         PageResponse<PostResponse> pageResponse = new PageResponse<>(List.of(post1, post2), 1, 10, 1, 2);
 
-        given(postService.getPosts(1, 10)).willReturn(pageResponse);
+        given(postService.getPosts(1, 10, null, null, null)).willReturn(pageResponse);
 
         // when & then
         mockMvc.perform(get("/posts")

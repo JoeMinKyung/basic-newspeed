@@ -115,7 +115,17 @@ com.example.springbasicnewspeed
 
 ### 포스트 조회
 
+1. 기본 정렬(생성일자 기준 최신순 정렬)
 ![image](https://github.com/user-attachments/assets/fb9a0f0b-fb8b-46f7-8c4a-24d601110a21)
+
+2. 수정일자 기준 최신순 정렬
+![image](https://github.com/user-attachments/assets/e0d17d40-f944-4f27-9f9c-6681ad6a9e12)
+
+3. 좋아요 순 정렬
+![image](https://github.com/user-attachments/assets/1fc542e5-6c57-4d99-83ab-2d4dd493eecd)
+
+4. 기간별 검색정렬
+![image](https://github.com/user-attachments/assets/95394fc0-f08b-49ed-a6b3-b8fd86a5cafa)
 
 
 <br>

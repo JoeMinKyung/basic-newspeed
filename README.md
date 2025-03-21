@@ -189,7 +189,10 @@ com.example.springbasicnewspeed
 
 <br>
 
+## 테스트 커버리지
 
+
+![스크린샷(2150)](https://github.com/user-attachments/assets/ce3ff983-d409-40d2-9316-0ed85c6f551d)
 
 
 

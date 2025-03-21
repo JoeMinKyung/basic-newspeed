@@ -98,23 +98,26 @@ public class PostServiceTest {
         User user = new User(email, "password", "test");
         userRepository.save(user);
 
+        // 게시물 생성
         Post post1 = new Post("첫 번째 글", "내용1", user);
         Post post2 = new Post("두 번째 글", "내용2", user);
 
+        // 생성일 기준 최신순으로 정렬된 페이지 반환
         Page<Post> postPage = new PageImpl<>(List.of(post2, post1));  // 최신순 정렬
 
         given(postRepository.findAllByOrderByCreatedAtDesc(any(Pageable.class)))
                 .willReturn(postPage);
 
         // when
-        PageResponse<PostResponse> postResponses = postService.getPosts(1, 10);
+        PageResponse<PostResponse> postResponses = postService.getPosts(1, 10, null, null, null);
 
         // then
         assertNotNull(postResponses.getData());
         assertEquals(2, postResponses.getData().size());
-        assertEquals("두 번째 글", postResponses.getData().get(0).getTitle());
-        assertEquals("첫 번째 글", postResponses.getData().get(1).getTitle());
+        assertEquals("두 번째 글", postResponses.getData().get(0).getTitle()); // 최신순으로 두 번째 글이 첫 번째
+        assertEquals("첫 번째 글", postResponses.getData().get(1).getTitle());  // 첫 번째 글
     }
+
 
     @Test
     void 팔로우한_사용자의_포스트를_조회할_수_있다() {
